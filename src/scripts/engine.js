@@ -3,13 +3,15 @@ const state = {
          squares: document.querySelectorAll(".square"),
          enemy: document.querySelector(".enemy"),
          timeLeft:document.querySelector("#time-left"),
-         score:document.querySelector("#score")
+         score:document.querySelector("#score"),
+         lives: document.querySelector("#lives")
     },
     values:{
         gamerVelocity: 1000,
         hitPosition: 0,
         result:0,
         currentTime: 60,
+        life:3,
     },
     actions:{
         timerId:setInterval(randomSquare, 1000),
@@ -22,10 +24,12 @@ function countDown(){
     state.values.currentTime--
     state.view.timeLeft.textContent = state.values.currentTime
 
-    if(state.values.currentTime <= 0){
+    if(state.values.currentTime <= 0 || state.values.life <= 0){
         clearInterval(state.actions.countDownTimerId)
         clearInterval(state.actions.timerId)
         alert(`Game Over! O seu resultado foi: ${state.values.result}`)
+        state.values.life = 'x' + 3
+        state.view.lives.textContent = state.values.life
     }
 }
 
@@ -54,9 +58,20 @@ function addListinerHitBox(){  //ouvir a açao
                 state.view.score.textContent = state.values.result
                 state.values.hitPosition = null
                 playSound('hit')
+                
 
             }else{
-                
+                switch (state.values.life){
+                    case 3: state.values.life --
+                            state.view.lives.textContent = 'x' + state.values.life
+                            break
+                    case 2 : state.values.life --
+                             state.view.lives.textContent = 'x' + state.values.life
+                             break
+                    case 1: state.values.life --
+                            state.view.lives.textContent = 'x' + state.values.life
+                            break  
+                }
             }
         })
     })
